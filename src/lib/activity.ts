@@ -9,13 +9,13 @@ import {
   EditActivityData,
 } from "@/types/activity";
 
-export async function getActivities() {
+export async function getActivities(): Promise<Activity[]> {
   return await prisma.activity.findMany({
     orderBy: { createdAt: "desc" },
   });
 }
 
-export async function getActivityById(id: string) {
+export async function getActivityById(id: string): Promise<Activity | null> {
   return await prisma.activity.findUnique({
     where: { id },
   });
