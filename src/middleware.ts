@@ -15,6 +15,10 @@ export default withAuth(
             return NextResponse.redirect(new URL('/unauthorized', req.url));
         }
 
+        if (pathname.startsWith("/dashboard/tech") && token?.role !== Role.TECH) {
+            return NextResponse.redirect(new URL('/unauthorized', req.url));
+        }
+
         return NextResponse.next();
     },
     {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
+import Link from "next/link";
 
 export default function AuthButton() {
   const { data: session, status } = useSession();
@@ -17,6 +18,26 @@ export default function AuthButton() {
         <span className="text-sm font-medium">
           {session.user?.email} ({session.user?.role})
         </span>
+        <div className="flex gap-2">
+          <Link
+            href="/dashboard/pr"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            PR
+          </Link>
+          <Link
+            href="/dashboard/sa"
+            className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            SA
+          </Link>
+          <Link
+            href="/dashboard/tech"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            Tech
+          </Link>
+        </div>
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
           className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
