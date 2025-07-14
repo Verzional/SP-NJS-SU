@@ -52,7 +52,7 @@ export async function createAchievement(
       data: validatedData,
     });
 
-    revalidatePath("/dashboard/sa");
+    revalidatePath("/dashboard/pr");
 
     return {
       success: true,
@@ -99,7 +99,7 @@ export async function editAchievement(
       data: validatedData,
     });
 
-    revalidatePath("/dashboard/sa");
+    revalidatePath("/dashboard/pr");
 
     return {
       success: true,
@@ -123,7 +123,7 @@ export async function deleteAchievement(
       where: { id },
     });
 
-    revalidatePath("/dashboard/sa");
+    revalidatePath("/dashboard/pr");
 
     return {
       success: true,
