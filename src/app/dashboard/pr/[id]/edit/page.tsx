@@ -1,5 +1,5 @@
-import ActivityForm from "../../../../../components/ActivityForm";
-import { getActivityById } from "@/lib/activity";
+import AchievementForm from "@/components/AchievementForm";
+import { getAchievementById } from "@/lib/achievement";
 import { notFound } from "next/navigation";
 
 export default async function EditActivityPage(props: {
@@ -7,16 +7,16 @@ export default async function EditActivityPage(props: {
 }) {
   const params = await props.params;
   const id = await params.id;
-  const activity = await getActivityById(id);
+  const achievement = await getAchievementById(id);
 
-  if (!activity) {
+  if (!achievement) {
     notFound();
   }
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Edit Activity</h1>
-      <ActivityForm mode="edit" data={activity} />
+      <h1 className="text-3xl font-bold mb-6">Create New Achievement</h1>
+      <AchievementForm mode="edit" data={achievement} />
     </div>
   );
 }

@@ -21,4 +21,14 @@ model Activity {
   quota       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-} 
+}
+
+model Achievement {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  imageUrl      String?
+  imagePublicId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

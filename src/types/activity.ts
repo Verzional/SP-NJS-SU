@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { FormProps } from "./action";
 
 export interface Activity {
   id: string;
@@ -10,19 +11,14 @@ export interface Activity {
   updatedAt: Date;
 }
 
-export interface EditActivityData {
+export interface ActivityData {
   title: string;
   description: string;
   location: string;
   quota: number;
 }
 
-export interface ActionResult<T = unknown> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  message?: string;
-}
+export type ActivityFormProps = FormProps<Activity>;
 
 export const ActivitySchema = z.object({
   title: z

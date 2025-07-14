@@ -2,12 +2,8 @@
 
 import prisma from "./prisma";
 import { revalidatePath } from "next/cache";
-import {
-  Activity,
-  ActionResult,
-  ActivitySchema,
-  EditActivityData,
-} from "@/types/activity";
+import { ActionResult } from "@/types/action";
+import { Activity, ActivityData, ActivitySchema } from "@/types/activity";
 
 export async function getActivities(): Promise<Activity[]> {
   return await prisma.activity.findMany({
@@ -69,7 +65,7 @@ export async function createActivity(
 export async function editActivity(
   id: string,
   formData: FormData
-): Promise<ActionResult<EditActivityData>> {
+): Promise<ActionResult<ActivityData>> {
   try {
     const rawData = {
       title: formData.get("title") as string,

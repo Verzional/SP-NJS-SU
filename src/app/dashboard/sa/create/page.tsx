@@ -1,4 +1,4 @@
-import ActivityForm from "../../../../ui/ActivityForm";
+import ActivityForm from "../../../../components/ActivityForm";
 
 export default function CreateActivityPage() {
   return (

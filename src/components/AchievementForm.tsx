@@ -1,54 +1,71 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Activity } from "@/types/activity";
-import { createActivity, editActivity } from "@/lib/activity";
+import { createAchievement, editAchievement } from "@/lib/achievement";
+import { AchievementFormProps } from "@/types/achievement";
+import { UploadWidget } from "./UploadWidget";
 
-interface ActivityFormProps {
-  mode: "create" | "edit";
-  activity?: Activity;
-}
-
-export default function ActivityForm({ mode, activity }: ActivityFormProps) {
-  // States
+export default function AchievementForm({ mode, data }: AchievementFormProps) {
+  /* States */
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>(data?.imageUrl || "");
+  const [imagePublicId, setImagePublicId] = useState<string>(
+    data?.imagePublicId || ""
+  );
+
   const router = useRouter();
 
-  // Form Submission Handler
+  function handleImageUpload(url: string, publicId?: string) {
+    setImageUrl(url);
+    setImagePublicId(publicId || "");
+  }
+
+  /* Form Submission Handler */
   async function handleSubmit(formData: FormData) {
     setIsSubmitting(true);
     setErrors([]);
     setSuccess("");
 
     try {
+      if (imageUrl) {
+        formData.append("imageUrl", imageUrl);
+      }
+
+      if (imagePublicId) {
+        formData.append("imagePublicId", imagePublicId);
+      }
+
       if (mode === "create") {
-        /* Create Activity */
-        const result = await createActivity(formData);
+        /* Create Achievement */
+        const result = await createAchievement(formData);
         if (result.success) {
-          setSuccess(result.message || "Activity created successfully!");
+          setSuccess(result.message || "Achievement created successfully!");
           const form = document.getElementById(
-            "activity-form"
+            "achievement-form"
           ) as HTMLFormElement;
           form?.reset();
+          setImageUrl("");
+          setImagePublicId("");
           setTimeout(() => {
-            router.push("/dashboard/sa");
+            router.push("/dashboard/pr");
           }, 500);
         } else {
-          setErrors([result.error || "Failed to create activity"]);
+          setErrors([result.error || "Failed to create achievement"]);
         }
-      } else if (mode === "edit" && activity) {
-        /* Edit Activity */
-        const result = await editActivity(activity.id, formData);
+      } else if (mode === "edit" && data) {
+        /* Edit Achievement */
+        const result = await editAchievement(data.id, formData);
         if (result.success) {
-          setSuccess(result.message || "Activity updated successfully!");
+          setSuccess(result.message || "Achievement updated successfully!");
           setTimeout(() => {
-            router.push("/dashboard/sa");
+            router.push("/dashboard/pr");
           }, 500);
         } else {
-          setErrors([result.error || "Failed to update activity"]);
+          setErrors([result.error || "Failed to update achievement"]);
         }
       }
     } catch (error) {
@@ -60,7 +77,7 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
     }
   }
 
-  // Render the Form
+  /* Render the Form */
   return (
     /* Form Container */
     <div className="w-full max-w-2xl mx-auto px-4">
@@ -71,7 +88,7 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
         </div>
       )}
 
-      {/* Error Messages */}
+      {/* Error Message */}
       {errors.length > 0 && (
         <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
           <ul className="list-disc list-inside">
@@ -82,9 +99,9 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
         </div>
       )}
 
-      {/* Activity Form */}
+      {/* Achievement Form */}
       <form
-        id="activity-form"
+        id="achievement-form"
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
@@ -94,7 +111,6 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
           isSubmitting ? "opacity-60 pointer-events-none" : ""
         }`}
       >
-        {/* Title */}
         <div>
           <label
             htmlFor="title"
@@ -106,7 +122,7 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
             type="text"
             id="title"
             name="title"
-            defaultValue={activity?.title || ""}
+            defaultValue={data?.title || ""}
             required
             maxLength={100}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -114,7 +130,7 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
           />
         </div>
 
-        {/* Description */}
+        {/* Description Input */}
         <div>
           <label
             htmlFor="description"
@@ -125,7 +141,7 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
           <textarea
             id="description"
             name="description"
-            defaultValue={activity?.description || ""}
+            defaultValue={data?.description || ""}
             required
             maxLength={500}
             rows={4}
@@ -134,45 +150,35 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
           />
         </div>
 
-        {/* Location */}
+        {/* Cover Image Input */}
         <div>
           <label
-            htmlFor="location"
+            htmlFor="cover_image"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
-            Location
+            Cover Image
           </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            defaultValue={activity?.location || ""}
-            required
-            maxLength={100}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter activity location"
-          />
-        </div>
-
-        {/* Quota */}
-        <div>
-          <label
-            htmlFor="quota"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Quota
-          </label>
-          <input
-            type="number"
-            id="quota"
-            name="quota"
-            defaultValue={activity?.quota || ""}
-            required
-            min={1}
-            max={1000}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="Enter participant quota"
-          />
+          <div className="space-y-3">
+            <UploadWidget onUploadSuccess={handleImageUpload} />
+            {imageUrl && (
+              <div className="flex items-center space-x-3">
+                <Image
+                  width={80}
+                  height={80}
+                  src={imageUrl}
+                  alt="Uploaded cover"
+                  className="w-20 h-20 object-cover rounded-md border"
+                />
+                <button
+                  type="button"
+                  onClick={() => setImageUrl("")}
+                  className="text-red-600 hover:text-red-800 text-sm"
+                >
+                  Remove Image
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Submit Button */}
@@ -206,9 +212,9 @@ export default function ActivityForm({ mode, activity }: ActivityFormProps) {
               {mode === "create" ? "Creating..." : "Updating..."}
             </span>
           ) : mode === "create" ? (
-            "Create Activity"
+            "Create Achievement"
           ) : (
-            "Update Activity"
+            "Update Achievement"
           )}
         </button>
       </form>
