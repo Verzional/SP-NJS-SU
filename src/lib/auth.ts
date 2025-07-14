@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import { Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -43,6 +44,9 @@ export const authOptions: NextAuthOptions = {
             });
           }
         }
+        
+        revalidatePath("/dashboard/tech");
+        
         return true;
       } else {
         throw new Error("You must use a @ciputra.ac.id email to sign in");
