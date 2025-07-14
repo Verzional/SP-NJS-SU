@@ -11,5 +11,5 @@ export interface FormProps<T> {
 }
 
 export interface UploadWidgetProps {
-  onUploadSuccess: (url: string) => void;
+  onUploadSuccess: (url: string, publicId: string) => void;
 }
