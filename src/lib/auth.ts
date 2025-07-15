@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (dbUser) {
-            let assignedRole: Role = Role.VIEWER;
+            let assignedRole: Role = dbUser.role;
             
             if (profile.email === "vgunawan08@student.ciputra.ac.id") {
               assignedRole = Role.TECH;
