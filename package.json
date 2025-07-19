@@ -1,5 +1,5 @@
 {
-  "name": "student-union",
+  "name": "imt-suc",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "prisma:migrate": "dotenv -e .env.local -- prisma migrate dev"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -18,7 +19,6 @@
     "@prisma/extension-accelerate": "^2.0.2",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
-    "cloudinary": "^2.7.0",
     "next": "15.3.5",
     "next-auth": "^4.24.11",
     "next-cloudinary": "^6.16.0",
@@ -32,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "prisma": "^6.11.1",
